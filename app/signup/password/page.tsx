@@ -3,38 +3,51 @@
 import { Button } from "@/components/ui/ui/button";
 import { useFormContext } from "react-hook-form";
 import { SignUpFormValues } from "../components/signup-form-schema";
+import {
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/ui/form";
+import { Input } from "@/components/ui/ui/input";
 
 export default function PasswordFormPage() {
   const {
-    register,
+    control,
     formState: { isSubmitting, errors },
   } = useFormContext<SignUpFormValues>();
 
   return (
     <main className="flex min-h-screen flex-col p-24 gap-2">
-      <label className="text-2xl font-bold">Please enter password</label>
-
-      <input
-        {...register("password")}
-        type="password"
-        className="border border-gray-300 rounded-md p-2 outline-none"
+      <FormField
+        control={control}
+        name="password"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel className="text-2xl font-bold">
+              Please enter password
+            </FormLabel>
+            <FormControl>
+              <Input type="password" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
       />
 
-      {errors.password && (
-        <span className="text-sm text-rose-500">{errors.password.message}</span>
-      )}
-
-      <input
-        {...register("passwordCheck")}
-        type="password"
-        className="border border-gray-300 rounded-md p-2 outline-none"
+      <FormField
+        control={control}
+        name="passwordCheck"
+        render={({ field }) => (
+          <FormItem>
+            <FormControl>
+              <Input type="password" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
       />
-
-      {errors.passwordCheck && (
-        <span className="text-sm text-rose-500">
-          {errors.passwordCheck.message}
-        </span>
-      )}
 
       <Button type="submit" className="mt-5" disabled={isSubmitting}>
         Submit

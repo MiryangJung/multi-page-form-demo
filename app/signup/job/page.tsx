@@ -4,15 +4,25 @@ import { Button } from "@/components/ui/ui/button";
 import { useFormContext } from "react-hook-form";
 import { SignUpFormValues } from "../components/signup-form-schema";
 import { useRouter } from "next/navigation";
+import {
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/ui/form";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/ui/select";
+import { Input } from "@/components/ui/ui/input";
 
 export default function JobFormPage() {
   const router = useRouter();
-  const {
-    register,
-    formState: { errors },
-    watch,
-    trigger,
-  } = useFormContext<SignUpFormValues>();
+  const { control, watch, trigger } = useFormContext<SignUpFormValues>();
 
   const { name } = watch("job");
 
@@ -25,37 +35,44 @@ export default function JobFormPage() {
 
   return (
     <main className="flex min-h-screen flex-col p-24 gap-2">
-      <label className="text-2xl font-bold">Please enter job</label>
-
-      <select
-        {...register("job.name")}
-        className="border border-gray-300 rounded-md p-2 outline-none"
-        placeholder="Please select job"
-      >
-        <option value="" disabled>
-          Please select job
-        </option>
-        <option value="engineer">Engineer</option>
-        <option value="designer">Designer</option>
-        <option value="other">Other</option>
-      </select>
+      <FormField
+        control={control}
+        name="job.name"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel className="text-2xl font-bold">
+              Please enter job
+            </FormLabel>
+            <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <FormControl>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Job" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                <SelectItem value="engineer">Engineer</SelectItem>
+                <SelectItem value="designer">Designer</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
       {name === "other" && (
-        <input
-          {...register("job.other")}
-          type="text"
-          className="border border-gray-300 rounded-md p-2 outline-none"
+        <FormField
+          control={control}
+          name="job.other"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input placeholder="Manager" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      )}
-
-      {errors.job?.name && (
-        <span className="text-sm text-rose-500">{errors.job.name.message}</span>
-      )}
-
-      {name === "other" && errors.job?.other && (
-        <span className="text-sm text-rose-500">
-          {errors.job.other.message}
-        </span>
       )}
 
       <Button type="button" onClick={onClickNext} className="mt-5">

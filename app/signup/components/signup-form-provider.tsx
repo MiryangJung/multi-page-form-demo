@@ -1,24 +1,23 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { FormProvider, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   SignUpFormValues,
   defaultValues,
   signUpFormSchema,
 } from "./signup-form-schema";
+import { Form } from "@/components/ui/ui/form";
 
 export default function SignUpFormProvider({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const router = useRouter();
   const form = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpFormSchema),
     defaultValues,
-    mode: "all"
+    mode: "all",
   });
 
   const { handleSubmit } = form;
@@ -29,8 +28,8 @@ export default function SignUpFormProvider({
   }
 
   return (
-    <FormProvider {...form}>
+    <Form {...form}>
       <form onSubmit={handleSubmit(onSubmit)}>{children}</form>
-    </FormProvider>
+    </Form>
   );
 }
